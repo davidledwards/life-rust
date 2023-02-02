@@ -1,0 +1,9 @@
+[package]
+name = "life-rust"
+version = "0.1.0"
+authors = ["David Edwards"]
+edition = "2021"
+
+[dependencies]
+libc = "0.2.139"
+random = "0.13.2"
