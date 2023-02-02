@@ -22,6 +22,7 @@ impl Display {
                 };
                 buf.push(c);
             }
+            buf.push('\n');
         }
         print!("\x1b[2J\x1b[0;0H{}", buf);
     }
@@ -42,6 +43,7 @@ impl Display {
                 };
                 buf.push(c);
             }
+            buf.push('\n');
         }
         print!("\x1b[2J\x1b[0;0H{}", buf);
     }

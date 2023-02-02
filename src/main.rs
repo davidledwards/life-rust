@@ -33,6 +33,7 @@ fn main() -> ExitCode {
             };
             let xsize = opts.x.unwrap_or(win_size.0);
             let ysize = opts.y.unwrap_or(win_size.1);
+            println!("x: {}, y: {}", xsize, ysize);
             let bound = (xsize, ysize);
             let start = opts
                 .start
@@ -47,7 +48,7 @@ fn main() -> ExitCode {
                 .unwrap();
             let fancy = opts.fancy.unwrap_or(false);
 
-            let mut u = Universe::new(bound, random_genesis(start, bound));
+            let mut u = Universe::new(bound, random_start(start, bound));
             let disp = Display::new(bound);
 
             loop {
@@ -94,7 +95,7 @@ fn print_usage() {
     println!("  --fancy          : use fancy display (default is basic)");
 }
 
-fn random_genesis(n: u32, bound: (u32, u32)) -> Vec<Point> {
+fn random_start(n: u32, bound: (u32, u32)) -> Vec<Point> {
     let seed = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .unwrap()
