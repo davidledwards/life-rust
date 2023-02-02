@@ -4,7 +4,6 @@ mod opt;
 mod term;
 mod universe;
 
-use display::Display;
 use opt::Options;
 use random::Source;
 use std::env;
@@ -46,17 +45,15 @@ fn main() -> ExitCode {
                 .or(Some(500))
                 .map(|n| Duration::from_millis(n))
                 .unwrap();
-            let fancy = opts.fancy.unwrap_or(false);
+            let disp = match opts.fancy {
+                Some(_) => display::fancy(xsize, ysize),
+                None => display::basic(xsize, ysize),
+            };
 
             let mut u = Universe::new(bound, random_start(start, bound));
-            let disp = Display::new(bound);
 
             loop {
-                if fancy {
-                    disp.render_fancy(&u);
-                } else {
-                    disp.render_basic(&u);
-                }
+                disp.render(&u);
                 thread::sleep(delay);
                 if gens == 0 || u.gen < gens {
                     u = u.tick();

@@ -1,17 +1,41 @@
 use crate::{Point, Universe};
 
-pub struct Display {
+pub trait Display {
+    fn render(&self, u: &Universe);
+}
+
+pub fn basic(xsize: u32, ysize: u32) -> Box<dyn Display> {
+    Box::new(BasicDisplay::new(xsize, ysize))
+}
+
+pub fn fancy(xsize: u32, ysize: u32) -> Box<dyn Display> {
+    Box::new(FancyDisplay::new(xsize, ysize))
+}
+
+struct BasicDisplay {
     xsize: u32,
     ysize: u32,
 }
 
-impl Display {
-    pub fn new(bound: (u32, u32)) -> Display {
-        let (xsize, ysize) = bound;
-        Display { xsize, ysize }
-    }
+struct FancyDisplay {
+    xsize: u32,
+    ysize: u32,
+}
 
-    pub fn render_basic(&self, u: &Universe) {
+impl BasicDisplay {
+    fn new(xsize: u32, ysize: u32) -> BasicDisplay {
+        BasicDisplay { xsize, ysize }
+    }
+}
+
+impl FancyDisplay {
+    fn new(xsize: u32, ysize: u32) -> FancyDisplay {
+        FancyDisplay { xsize, ysize }
+    }
+}
+
+impl Display for BasicDisplay {
+    fn render(&self, u: &Universe) {
         let mut buf = String::new();
         for y in 0..self.ysize as i32 {
             for x in 0..self.xsize as i32 {
@@ -26,8 +50,10 @@ impl Display {
         }
         print!("\x1b[2J\x1b[0;0H{}", buf);
     }
+}
 
-    pub fn render_fancy(&self, u: &Universe) {
+impl Display for FancyDisplay {
+    fn render(&self, u: &Universe) {
         let mut buf = String::new();
         for y in 0..self.ysize as i32 {
             for x in 0..self.xsize as i32 {
