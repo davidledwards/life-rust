@@ -4,6 +4,7 @@ mod opt;
 mod term;
 mod universe;
 
+use error::Error;
 use opt::Options;
 use random::Source;
 use std::env;
@@ -16,7 +17,10 @@ use universe::{Point, Universe};
 fn main() -> ExitCode {
     let opts = match Options::parse(env::args().skip(1)) {
         Err(e) => {
-            println!("error: {:?}", e);
+            match e {
+                Error::Options(s) => println!("{}", s),
+                Error::IO(s) => println!("I/O error: {}", s),
+            }
             return ExitCode::from(1);
         }
         Ok(opts) => opts,
