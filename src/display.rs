@@ -39,12 +39,12 @@ impl Display for BasicDisplay {
         let mut buf = String::new();
         for y in 0..self.ysize as i32 {
             for x in 0..self.xsize as i32 {
-                let c = if u.alive.contains(&Point(x, y)) {
-                    '#'
+                let s = if u.alive.contains(&Point(x, y)) {
+                    "\x1b[0;;44m \x1b[0m"
                 } else {
-                    ' '
+                    " "
                 };
-                buf.push(c);
+                buf.push_str(s);
             }
             buf.push('\n');
         }
@@ -58,16 +58,16 @@ impl Display for FancyDisplay {
         for y in 0..self.ysize as i32 {
             for x in 0..self.xsize as i32 {
                 let p = Point(x, y);
-                let c = if u.born.contains(&p) {
-                    '+'
+                let s = if u.born.contains(&p) {
+                    "\x1b[0;;42m \x1b[0m"
                 } else if u.alive.contains(&p) {
-                    '#'
+                    "\x1b[0;;44m \x1b[0m"
                 } else if u.died.contains(&p) {
-                    '-'
+                    "\x1b[0;;41m \x1b[0m"
                 } else {
-                    ' '
+                    " "
                 };
-                buf.push(c);
+                buf.push_str(s);
             }
             buf.push('\n');
         }

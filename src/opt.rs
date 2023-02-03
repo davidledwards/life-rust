@@ -2,25 +2,25 @@ use crate::error::Error;
 
 #[derive(Debug)]
 pub struct Options {
-    pub help: Option<bool>,
+    pub help: bool,
     pub x: Option<u32>,
     pub y: Option<u32>,
-    pub start: Option<u32>,
-    pub gens: Option<u32>,
-    pub delay: Option<u64>,
-    pub fancy: Option<bool>,
+    pub start: u32,
+    pub gens: u32,
+    pub delay: u64,
+    pub fancy: bool,
 }
 
 impl Default for Options {
     fn default() -> Options {
         Options {
-            help: None,
+            help: false,
             x: None,
             y: None,
-            start: None,
-            gens: None,
-            delay: None,
-            fancy: None,
+            start: 0,
+            gens: 0,
+            delay: 500,
+            fancy: false,
         }
     }
 }
@@ -34,13 +34,13 @@ impl Options {
         let mut it = args.into_iter();
         while let Some(arg) = it.next() {
             match arg.as_str() {
-                "-?" | "--help" => opts.help = Some(true),
+                "-?" | "--help" => opts.help = true,
                 "-x" => opts.x = Some(parse_arg(&arg, it.next())?),
                 "-y" => opts.y = Some(parse_arg(&arg, it.next())?),
-                "--start" => opts.start = Some(parse_arg(&arg, it.next())?),
-                "--gens" => opts.gens = Some(parse_arg(&arg, it.next())?),
-                "--delay" => opts.delay = Some(parse_arg(&arg, it.next())? as u64),
-                "--fancy" => opts.fancy = Some(true),
+                "--start" => opts.start = parse_arg(&arg, it.next())?,
+                "--gens" => opts.gens = parse_arg(&arg, it.next())?,
+                "--delay" => opts.delay = parse_arg(&arg, it.next())? as u64,
+                "--fancy" => opts.fancy = true,
                 _ => return Err(Error::Options(format!("{}: unexpected argument", arg))),
             };
         }
