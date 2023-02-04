@@ -19,7 +19,7 @@ impl Default for Options {
             y: None,
             start: 0,
             gens: 0,
-            delay: 500,
+            delay: 100,
             fancy: false,
         }
     }

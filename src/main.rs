@@ -17,24 +17,25 @@ const USAGE: &str = r#"
 usage: life OPTIONS
        life --help
 
-  Runs a simulation of Conway's Game of Life on the console.
+  Runs a simulation of Conway's Game of Life on the terminal.
 
   The --x and --y options, if omitted, are derived from the terminal size.
 
-  If --fancy is specified, cells for each generation are displayed as follows:
-    GREEN if born
-    BLUE  if alive, but born in prior generation
-    RED   if died
+  Living cells are displayed as blue blocks. If --fancy is specified, cells
+  for each generation are displayed as follows:
+    > green, if born
+    > blue, if alive but born in prior generation
+    > red, if died
 
   optional:
-    --x SIZE         : width of universe (default is width of terminal
-    --y SIZE         : height of universe (default is height of terminal
+    --x SIZE         : width of universe (default is width of terminal)
+    --y SIZE         : height of universe (default is height of terminal)
     --start COUNT    : number of living cells at start; 0 means derive
-                       derive from universe size (default=0)
+                       from universe size (default=0)
     --gen GENS       : number of generations to simulate; 0 is forever
                        (default=0)
     --delay MILLIS   : delay in milliseconds before next generation
-                       (default=500)
+                       (default=100)
     --fancy          : use fancy display (default is basic)
 "#;
 
