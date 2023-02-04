@@ -13,7 +13,8 @@ use std::process::ExitCode;
 use std::thread;
 use std::time::Duration;
 
-const USAGE: &str = r#"usage: life OPTIONS
+const USAGE: &str = r#"
+usage: life OPTIONS
        life --help
 
   Runs a simulation of Conway's Game of Life on the console.
@@ -21,9 +22,9 @@ const USAGE: &str = r#"usage: life OPTIONS
   The --x and --y options, if omitted, are derived from the terminal size.
 
   If --fancy is specified, cells for each generation are displayed as follows:
-    `+` if born
-    `#` if alive, but born in prior generation
-    `-` if died
+    GREEN if born
+    BLUE  if alive, but born in prior generation
+    RED   if died
 
   optional:
     --x SIZE         : width of universe (default is width of terminal
@@ -34,7 +35,8 @@ const USAGE: &str = r#"usage: life OPTIONS
                        (default=0)
     --delay MILLIS   : delay in milliseconds before next generation
                        (default=500)
-    --fancy          : use fancy display (default is basic)"#;
+    --fancy          : use fancy display (default is basic)
+"#;
 
 fn main() -> ExitCode {
     match run() {
