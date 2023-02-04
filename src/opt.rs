@@ -34,9 +34,9 @@ impl Options {
         let mut it = args.into_iter();
         while let Some(arg) = it.next() {
             match arg.as_str() {
-                "-?" | "--help" => opts.help = true,
-                "-x" => opts.x = Some(parse_arg(&arg, it.next())?),
-                "-y" => opts.y = Some(parse_arg(&arg, it.next())?),
+                "--help" => opts.help = true,
+                "--x" => opts.x = Some(parse_arg(&arg, it.next())?),
+                "--y" => opts.y = Some(parse_arg(&arg, it.next())?),
                 "--start" => opts.start = parse_arg(&arg, it.next())?,
                 "--gens" => opts.gens = parse_arg(&arg, it.next())?,
                 "--delay" => opts.delay = parse_arg(&arg, it.next())? as u64,
