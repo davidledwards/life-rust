@@ -3,7 +3,7 @@ use crate::universe::{Point, Universe};
 pub struct Display {
     xsize: u32,
     ysize: u32,
-    fancy: bool,
+    render_point: fn(&Point, &Universe) -> &'static str,
 }
 
 impl Display {
@@ -11,7 +11,7 @@ impl Display {
         Display {
             xsize,
             ysize,
-            fancy: false,
+            render_point: Display::render_basic,
         }
     }
 
@@ -19,7 +19,7 @@ impl Display {
         Display {
             xsize,
             ysize,
-            fancy: true,
+            render_point: Display::render_fancy,
         }
     }
 
@@ -31,35 +31,30 @@ impl Display {
         for y in 0..self.ysize as i32 {
             for x in 0..self.xsize as i32 {
                 let p = Point(x, y);
-                let s = if self.fancy {
-                    render_fancy(&p, &u)
-                } else {
-                    render_basic(&p, &u)
-                };
-                buf.push_str(s);
+                buf.push_str((self.render_point)(&p, &u));
             }
             buf.push('\n');
         }
         print!("\x1b[H{}", buf);
     }
-}
 
-fn render_basic(p: &Point, u: &Universe) -> &'static str {
-    if u.alive.contains(&p) {
-        "\x1b[0;;44m \x1b[0m"
-    } else {
-        " "
+    fn render_basic(p: &Point, u: &Universe) -> &'static str {
+        if u.alive.contains(&p) {
+            "\x1b[0;;44m \x1b[0m"
+        } else {
+            " "
+        }
     }
-}
 
-fn render_fancy(p: &Point, u: &Universe) -> &'static str {
-    if u.born.contains(&p) {
-        "\x1b[0;;42m \x1b[0m"
-    } else if u.alive.contains(&p) {
-        "\x1b[0;;44m \x1b[0m"
-    } else if u.died.contains(&p) {
-        "\x1b[0;;41m \x1b[0m"
-    } else {
-        " "
+    fn render_fancy(p: &Point, u: &Universe) -> &'static str {
+        if u.born.contains(&p) {
+            "\x1b[0;;42m \x1b[0m"
+        } else if u.alive.contains(&p) {
+            "\x1b[0;;44m \x1b[0m"
+        } else if u.died.contains(&p) {
+            "\x1b[0;;41m \x1b[0m"
+        } else {
+            " "
+        }
     }
 }
