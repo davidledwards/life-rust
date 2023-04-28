@@ -48,7 +48,7 @@ impl Options {
     }
 }
 
-fn parse_arg(arg: &String, next: Option<String>) -> Result<u32, Error> {
+fn parse_arg(arg: &str, next: Option<String>) -> Result<u32, Error> {
     match next {
         Some(a) => match a.parse::<u32>() {
             Ok(x) => Ok(x),
@@ -61,5 +61,109 @@ fn parse_arg(arg: &String, next: Option<String>) -> Result<u32, Error> {
             "{}: expecting argument to follow",
             arg
         ))),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn opt_defaults() {
+        let opts = Options::parse(Vec::new());
+        assert!(opts.is_ok());
+        let opts = opts.unwrap();
+        assert_eq!(opts.help, false);
+        assert_eq!(opts.x, None);
+        assert_eq!(opts.y, None);
+        assert_eq!(opts.start, 0);
+        assert_eq!(opts.gens, 0);
+        assert_eq!(opts.delay, 100);
+        assert_eq!(opts.fancy, false);
+    }
+
+    #[test]
+    fn opt_help() {
+        let args = vec!["--help".to_string()];
+        verify_opts(&args, |opts| opts.help == true);
+    }
+
+    #[test]
+    fn opt_x() {
+        let args = vec!["--x".to_string(), "7".to_string()];
+        verify_opts(&args, |opts| opts.x == Some(7));
+    }
+
+    #[test]
+    fn opt_y() {
+        let args = vec!["--y".to_string(), "9".to_string()];
+        verify_opts(&args, |opts| opts.y == Some(9));
+    }
+
+    #[test]
+    fn opt_start() {
+        let args = vec!["--start".to_string(), "123".to_string()];
+        verify_opts(&args, |opts| opts.start == 123);
+    }
+
+    #[test]
+    fn opt_gens() {
+        let args = vec!["--gens".to_string(), "33".to_string()];
+        verify_opts(&args, |opts| opts.gens == 33);
+    }
+
+    #[test]
+    fn opt_delay() {
+        let args = vec!["--delay".to_string(), "999".to_string()];
+        verify_opts(&args, |opts| opts.delay == 999);
+    }
+
+    #[test]
+    fn opt_fancy() {
+        let args = vec!["--fancy".to_string()];
+        verify_opts(&args, |opts| opts.fancy == true);
+    }
+
+    #[test]
+    fn good_arg() {
+        match parse_arg("--arg", Some("47".to_string())) {
+            Ok(v) => assert_eq!(v, 47),
+            Err(_) => panic!()
+        }
+    }
+
+    #[test]
+    fn bad_arg() {
+        match parse_arg("--arg", Some("47_".to_string())) {
+            Ok(_) => panic!(),
+            Err(_) => ()
+        }
+    }
+
+    #[test]
+    fn missing_arg() {
+        match parse_arg("--arg", None) {
+            Ok(_) => panic!(),
+            Err(_) => (),
+        }
+    }
+
+    #[test]
+    fn unsupported_opt() {
+        let args = vec!["--x".to_string(), "--y".to_string(), "--ugh".to_string()];
+        match Options::parse(args.clone()) {
+            Ok(_) => panic!("args: {:?}", args),
+            Err(_) => (),
+        }
+    }
+
+    fn verify_opts<F>(args: &Vec<String>, test_fn: F)
+    where
+        F: Fn(&Options) -> bool,
+    {
+        match Options::parse(args.clone()) {
+            Ok(opts) => assert!(test_fn(&opts), "args: {:?}", args),
+            Err(e) => panic!("error: {:?}, args: {:?}", e, args),
+        }
     }
 }
