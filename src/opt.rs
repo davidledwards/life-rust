@@ -128,32 +128,45 @@ mod tests {
     fn good_arg() {
         match parse_arg("--arg", Some("47".to_string())) {
             Ok(v) => assert_eq!(v, 47),
-            Err(_) => panic!()
+            Err(_) => panic!(),
         }
     }
 
     #[test]
     fn bad_arg() {
         match parse_arg("--arg", Some("47_".to_string())) {
-            Ok(_) => panic!(),
-            Err(_) => ()
+            Err(Error::Options(e)) => assert!(
+                e.contains("47_: invalid argument following --arg"),
+                "error: {}",
+                e
+            ),
+            _ => panic!(),
         }
     }
 
     #[test]
     fn missing_arg() {
         match parse_arg("--arg", None) {
-            Ok(_) => panic!(),
-            Err(_) => (),
+            Err(Error::Options(e)) => assert!(
+                e.contains("--arg: expecting argument to follow"),
+                "error: {}",
+                e
+            ),
+            _ => panic!(),
         }
     }
 
     #[test]
     fn unsupported_opt() {
-        let args = vec!["--x".to_string(), "--y".to_string(), "--ugh".to_string()];
+        let args = vec!["--help".to_string(), "--foo".to_string()];
         match Options::parse(args.clone()) {
-            Ok(_) => panic!("args: {:?}", args),
-            Err(_) => (),
+            Err(Error::Options(e)) => assert!(
+                e.contains("--foo: unexpected argument"),
+                "error: {}, args: {:?}",
+                e,
+                args
+            ),
+            _ => panic!(),
         }
     }
 
