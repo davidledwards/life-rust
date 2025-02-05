@@ -59,7 +59,7 @@ impl Universe {
     }
 
     pub fn tick(self) -> Universe {
-        let mut alive: HashSet<Point> = self.alive.iter().map(|p| *p).collect();
+        let mut alive: HashSet<Point> = self.alive.iter().copied().collect();
 
         let died: HashSet<Point> = alive
             .iter()
@@ -67,7 +67,7 @@ impl Universe {
                 let len = self.live_neighbors(&alive, p).len();
                 len < 2 || len > 3
             })
-            .map(|p| *p)
+            .copied()
             .collect();
 
         let born: HashSet<Point> = alive

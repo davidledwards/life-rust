@@ -7,3 +7,6 @@ edition = "2021"
 [dependencies]
 libc = "0.2.139"
 random = "0.13.2"
+
+[lints.clippy]
+manual_range_contains = "allow"

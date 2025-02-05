@@ -31,7 +31,7 @@ impl Display {
         for y in 0..self.ysize as i32 {
             for x in 0..self.xsize as i32 {
                 let p = Point(x, y);
-                buf.push_str((self.render_point)(&p, &u));
+                buf.push_str((self.render_point)(&p, u));
             }
             buf.push('\n');
         }
@@ -39,7 +39,7 @@ impl Display {
     }
 
     fn render_basic(p: &Point, u: &Universe) -> &'static str {
-        if u.alive.contains(&p) {
+        if u.alive.contains(p) {
             "\x1b[0;;44m \x1b[0m"
         } else {
             " "
@@ -47,11 +47,11 @@ impl Display {
     }
 
     fn render_fancy(p: &Point, u: &Universe) -> &'static str {
-        if u.born.contains(&p) {
+        if u.born.contains(p) {
             "\x1b[0;;42m \x1b[0m"
-        } else if u.alive.contains(&p) {
+        } else if u.alive.contains(p) {
             "\x1b[0;;44m \x1b[0m"
-        } else if u.died.contains(&p) {
+        } else if u.died.contains(p) {
             "\x1b[0;;41m \x1b[0m"
         } else {
             " "
